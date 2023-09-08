@@ -74,7 +74,9 @@ function GetTaskDetails(props) {
           <h1 className="display-3">Task Details</h1>
           <h2>
             <button
-              onClick={() => handleOnClick("/KanbanBoard")}
+              onClick={() =>
+                handleOnClick(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+              }
               className="btn btn-sm btn-primary"
             >
               back

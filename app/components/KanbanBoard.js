@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./KanbanBoard.css"; // Import your CSS styles
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 function KanbanBoard(props) {
@@ -16,6 +16,9 @@ function KanbanBoard(props) {
   // const [tasks, setTasks] = useState(initialTasks);
   // const navigate = useNavigate();
 
+  const [AppAcronym, setAppAcronym] = useState("");
+  const location = useLocation();
+  const queryparams = new URLSearchParams(location.search);
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
   async function ispermitopen() {
@@ -164,13 +167,20 @@ function KanbanBoard(props) {
   }
 
   useEffect(() => {
+    const acronym = queryparams.get("App_Acronym"); // Get App_Acronym from URL params
+    if (acronym) {
+      setAppAcronym(acronym); // Update the state with the App_Acronym
+    }
+  }, [queryparams]);
+
+  useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await axios.post(
           "http://localhost:4000/gettaskdetailskanban",
           {
             token: localStorage.getItem("token"),
-            Task_app_Acronym: props.App_Acronym,
+            Task_app_Acronym: AppAcronym,
           }
         );
 
@@ -190,7 +200,156 @@ function KanbanBoard(props) {
     };
 
     fetchTasks();
-  }, [props.App_Acronym]);
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const CreateResponse = await axios.post(
+          "http://localhost:4000/getapppermitcreate",
+          {
+            token: localStorage.getItem("token"),
+            App_Acronym: AppAcronym,
+          }
+        );
+
+        const response = await axios.post(
+          "http://localhost:4000/checkmygroup",
+          {
+            token: localStorage.getItem("token"),
+            groupName: CreateResponse.data.data,
+          }
+        );
+        props.setappPermitCreate(response.data.isAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchData();
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const OpenResponse = await axios.post(
+          "http://localhost:4000/getapppermitopen",
+          {
+            token: localStorage.getItem("token"),
+            App_Acronym: AppAcronym,
+          }
+        );
+
+        const response = await axios.post(
+          "http://localhost:4000/checkmygroup",
+          {
+            token: localStorage.getItem("token"),
+            groupName: OpenResponse.data.data,
+          }
+        );
+        props.setappPermitOpen(response.data.isAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchData();
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const ToDoResponse = await axios.post(
+          "http://localhost:4000/getapppermittodo",
+          {
+            token: localStorage.getItem("token"),
+            App_Acronym: AppAcronym,
+          }
+        );
+
+        const response = await axios.post(
+          "http://localhost:4000/checkmygroup",
+          {
+            token: localStorage.getItem("token"),
+            groupName: ToDoResponse.data.data,
+          }
+        );
+        props.setappPermitToDo(response.data.isAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchData();
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const DoingResponse = await axios.post(
+          "http://localhost:4000/getapppermitdoing",
+          {
+            token: localStorage.getItem("token"),
+            App_Acronym: AppAcronym,
+          }
+        );
+
+        const response = await axios.post(
+          "http://localhost:4000/checkmygroup",
+          {
+            token: localStorage.getItem("token"),
+            groupName: DoingResponse.data.data,
+          }
+        );
+        props.setappPermitDoing(response.data.isAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchData();
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const DoneResponse = await axios.post(
+          "http://localhost:4000/getapppermitdone",
+          {
+            token: localStorage.getItem("token"),
+            App_Acronym: AppAcronym,
+          }
+        );
+
+        const response = await axios.post(
+          "http://localhost:4000/checkmygroup",
+          {
+            token: localStorage.getItem("token"),
+            groupName: DoneResponse.data.data,
+          }
+        );
+        props.setappPermitDone(response.data.isAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    fetchData();
+  }, [AppAcronym]);
+
+  useEffect(() => {
+    axios
+      .post("http://localhost:4000/checkmygroup", {
+        token: localStorage.getItem("token"),
+        groupName: "project manager",
+      })
+      .then((response) => {
+        props.setisProjectManager(response.data.isAdmin);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   async function handleOnClick(path) {
     if (!(await isActive())) {
@@ -288,7 +447,7 @@ function KanbanBoard(props) {
     }
 
     if (!(await ispermitcreate())) {
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     } else {
       navigate(path);
@@ -320,7 +479,7 @@ function KanbanBoard(props) {
     }
 
     if (!props.isProjectManager) {
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     } else {
       navigate(path);
@@ -361,7 +520,7 @@ function KanbanBoard(props) {
       );
 
       if (taskstate.data.error) {
-        navigate("/KanbanBoard");
+        navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         return;
       }
       if (taskstate.data.response.Task_state === "Open") {
@@ -369,7 +528,7 @@ function KanbanBoard(props) {
 
         let result = await ispermitopen();
         if (result === false) {
-          navigate("/KanbanBoard");
+          navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         } else {
           navigate(path);
         }
@@ -379,7 +538,7 @@ function KanbanBoard(props) {
 
         let result = await ispermittodo();
         if (result === false) {
-          navigate("/KanbanBoard");
+          navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         } else {
           navigate(path);
         }
@@ -389,7 +548,7 @@ function KanbanBoard(props) {
 
         let result = await ispermitdoing();
         if (result === false) {
-          navigate("/KanbanBoard");
+          navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         } else {
           navigate(path);
         }
@@ -399,7 +558,7 @@ function KanbanBoard(props) {
 
         let result = await ispermitdone();
         if (result === false) {
-          navigate("/KanbanBoard");
+          navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         } else {
           navigate(path, {
             state: {
@@ -414,7 +573,7 @@ function KanbanBoard(props) {
 
       //   let result = await ispermitcreate();
       //   if (result === false) {
-      //     navigate("/KanbanBoard");
+      //     navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       //   } else {
       //     navigate(path);
       //   }
@@ -429,7 +588,7 @@ function KanbanBoard(props) {
 
   return (
     <div className="kanban-board">
-      <h1 className="board-title">Kanban Board for {props.App_Acronym}</h1>
+      <h1 className="board-title">Kanban Board for {AppAcronym}</h1>
       <h2>
         <button
           onClick={() => handleOnClick("/GetAppDetails")}

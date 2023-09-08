@@ -167,7 +167,9 @@ function CreateNewPlan(props) {
             <h1 className="display-3">Create New Plan</h1>
             <h2>
               <button
-                onClick={() => handleOnClick("/KanbanBoard")}
+                onClick={() =>
+                  handleOnClick(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+                }
                 className="btn btn-sm btn-primary"
               >
                 back

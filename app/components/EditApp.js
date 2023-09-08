@@ -214,6 +214,57 @@ function EditApp(props) {
         }
       })
       .catch((error) => console.error(error));
+
+    axios
+      .post("http://localhost:4000/getappdetailsforoneapp", {
+        token,
+        App_Acronym: props.App_Acronym,
+      })
+      .then((response) => {
+        // setPermitOpen(response.data.response.App_permit_Open);
+        // setPermitToDoList(response.data.response.App_permit_toDoList);
+        // setPermitDoing(response.data.response.App_permit_Doing);
+        // setPermitDone(response.data.response.App_permit_Done);
+        // setPermitCreate(response.data.response.App_permit_create);
+        const preselectedPermitOpen = [
+          {
+            value: response.data.response.App_permit_Open.toLowerCase(),
+            label: response.data.response.App_permit_Open,
+          },
+        ];
+        setPermitOpen(preselectedPermitOpen);
+        const preselectedPermitToDoList = [
+          {
+            value: response.data.response.App_permit_toDoList.toLowerCase(),
+            label: response.data.response.App_permit_toDoList,
+          },
+        ];
+        setPermitToDoList(preselectedPermitToDoList);
+        const preselectedPermitDoing = [
+          {
+            value: response.data.response.App_permit_Doing.toLowerCase(),
+            label: response.data.response.App_permit_Doing,
+          },
+        ];
+        setPermitDoing(preselectedPermitDoing);
+        const preselectedPermitDone = [
+          {
+            value: response.data.response.App_permit_Done.toLowerCase(),
+            label: response.data.response.App_permit_Done,
+          },
+        ];
+        setPermitDone(preselectedPermitDone);
+        const preselectedPermitCreate = [
+          {
+            value: response.data.response.App_permit_create.toLowerCase(),
+            label: response.data.response.App_permit_create,
+          },
+        ];
+        setPermitCreate(preselectedPermitCreate);
+      })
+      .catch((error) => {
+        console.error("Error fetching task details:", error);
+      });
   }, []);
 
   const handleOnClick = (path) => {

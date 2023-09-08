@@ -116,7 +116,7 @@ function EditTask(props) {
         // setPlan_app_Acronym([]);
       }
 
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
     } catch (error) {
       console.error(error);
     }
@@ -189,7 +189,9 @@ function EditTask(props) {
             <h1 className="display-3">Edit {props.Task_id}</h1>
             <h2>
               <button
-                onClick={() => handleOnClick("/KanbanBoard")}
+                onClick={() =>
+                  handleOnClick(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+                }
                 className="btn btn-sm btn-primary"
               >
                 back

@@ -52,7 +52,7 @@ function PromoteTask(props) {
 
     if (!(await ispermitopen()) && props.TaskState === 1) {
       alert("You are not authorized to perform this action.");
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     }
 
@@ -90,7 +90,7 @@ function PromoteTask(props) {
 
     if (!(await ispermittodo()) && props.TaskState === 2) {
       alert("You are not authorized to perform this action.");
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     }
 
@@ -128,7 +128,7 @@ function PromoteTask(props) {
 
     if (!(await ispermitdoing()) && props.TaskState === 3) {
       alert("You are not authorized to perform this action.");
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     }
 
@@ -166,7 +166,7 @@ function PromoteTask(props) {
 
     if (!(await ispermitdone()) && props.TaskState === 4) {
       alert("You are not authorized to perform this action.");
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     }
 
@@ -252,7 +252,7 @@ function PromoteTask(props) {
         alert(response.data.error);
       }
 
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
     } catch (error) {
       console.error(error);
     }
@@ -321,7 +321,9 @@ function PromoteTask(props) {
             <h1 className="display-3">Promote {props.Task_id}</h1>
             <h2>
               <button
-                onClick={() => handleOnClick("/KanbanBoard")}
+                onClick={() =>
+                  handleOnClick(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+                }
                 className="btn btn-sm btn-primary"
               >
                 back

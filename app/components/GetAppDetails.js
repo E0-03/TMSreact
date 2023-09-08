@@ -356,6 +356,20 @@ function GetAppDetails(props) {
     }
   }, []);
 
+  useEffect(() => {
+    axios
+      .post("http://localhost:4000/checkmygroup", {
+        token: localStorage.getItem("token"),
+        groupName: "project lead",
+      })
+      .then((response) => {
+        props.setisProjectLead(response.data.isAdmin);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   /*const handleEdit = async (username) => {
     try {
       const isAdminResponse = await axios.post(
@@ -431,7 +445,10 @@ function GetAppDetails(props) {
                   <td>
                     <button
                       onClick={() =>
-                        handleOnClickTask("/KanbanBoard", user.App_Acronym)
+                        handleOnClickTask(
+                          `/KanbanBoard?App_Acronym=${user.App_Acronym}`,
+                          user.App_Acronym
+                        )
                       }
                       className="btn btn-sm btn-primary"
                     >

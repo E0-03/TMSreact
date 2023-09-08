@@ -75,7 +75,7 @@ function CreateNewTask(props) {
 
     if (!(await ispermitcreate())) {
       alert("You are not authorized to perform this action.");
-      navigate("/KanbanBoard");
+      navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
       return;
     }
 
@@ -156,7 +156,7 @@ function CreateNewTask(props) {
 
       if (response.data.success === "Task created successfully") {
         alert("Task created successfully!");
-        navigate("/KanbanBoard");
+        navigate(`/KanbanBoard?App_Acronym=${props.App_Acronym}`);
         setTask_name("");
         setTask_description("");
         setTask_notes("");
@@ -261,7 +261,9 @@ function CreateNewTask(props) {
             <h1 className="display-3">Create New Task</h1>
             <h2>
               <button
-                onClick={() => handleOnClick("/KanbanBoard")}
+                onClick={() =>
+                  handleOnClick(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+                }
                 className="btn btn-sm btn-primary"
               >
                 back

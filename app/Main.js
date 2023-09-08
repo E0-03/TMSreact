@@ -260,6 +260,8 @@ function Main() {
                 setLogin={setLogin}
                 setTask_id={setTask_id}
                 Task_id={Task_id}
+                App_Acronym={App_Acronym}
+                setApp_Acronym={setApp_Acronym}
               />
             ) : (
               <BodyUnauthorised />

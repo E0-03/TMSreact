@@ -118,7 +118,9 @@ function GetPlanDetails(props) {
           <h1 className="display-3">Plan List for {props.App_Acronym}</h1>
           <h2>
             <button
-              onClick={() => handleBack("/KanbanBoard")}
+              onClick={() =>
+                handleBack(`/KanbanBoard?App_Acronym=${props.App_Acronym}`)
+              }
               className="btn btn-sm btn-primary"
             >
               back
